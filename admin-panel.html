@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Administrador - Estética Belleza</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        /* Estilos base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+            background: #f5f5f5;
+        }
+
+        .admin-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .appointments-table {
+            width: 100%;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .appointments-table th,
+        .appointments-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        .appointments-table th {
+            background: #ff6b6b;
+            color: white;
+        }
+
+        .status-pending {
+            color: orange;
+        }
+
+        .status-confirmed {
+            color: green;
+        }
+
+        .status-cancelled {
+            color: red;
+        }
+
+        .filters {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 15px;
+        }
+
+        .filters select {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            background: #ff6b6b;
+            color: white;
+        }
+
+        .btn:hover {
+            background: #ff5252;
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <div class="admin-header">
+            <h1>Panel de Administrador</h1>
+            <button class="btn" onclick="location.href='index.html'">Cerrar Sesión</button>
+        </div>
+
+        <div class="filters">
+            <select id="dateFilter">
+                <option value="today">Hoy</option>
+                <option value="tomorrow">Mañana</option>
+                <option value="week">Esta semana</option>
+                <option value="month">Este mes</option>
+            </select>
+
+            <select id="serviceFilter">
+                <option value="all">Todos los servicios</option>
+                <option value="depilation">Depilación</option>
+                <option value="nails">Uñas</option>
+            </select>
+
+            <button class="btn" onclick="refreshAppointments()">Actualizar</button>
+        </div>
+
+        <table class="appointments-table">
+            <thead>
+                <tr>
+                    <th>Fecha y Hora</th>
+                    <th>Cliente</th>
+                    <th>Servicio</th>
+                    <th>Contacto</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="appointmentsBody">
+                <!-- Los turnos se cargarán dinámicamente -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        // Simulación de datos de reservas
+        const appointments = [
+            {
+                id: 1,
+                datetime: '2025-01-14 10:00',
+                client: 'María López',
+                service: 'Esmaltado Semipermanente',
+                contact: 'maria@email.com',
+                status: 'confirmed'
+            },
+            {
+                id: 2,
+                datetime: '2025-01-14 11:30',
+                client: 'Ana García',
+                service: 'Depilación - Piernas',
+                contact: '555-0123',
+                status: 'pending'
+            },
+            // Agregar más datos de ejemplo
+        ];
+
+        function loadAppointments() {
+            const tbody = document.getElementById('appointmentsBody');
+            tbody.innerHTML = appointments.map(appointment => `
+                <tr>
+                    <td>${appointment.datetime}</td>
+                    <td>${appointment.client}</td>
+                    <td>${appointment.service}</td>
+                    <td>${appointment.contact}</td>
+                    <td class="status-${appointment.status}">
+                        ${appointment.status.charAt(0).toUpperCase() + appointment.status.slice(1)}
+                    </td>
+                    <td>
+                        <button class="btn" onclick="updateStatus(${appointment.id}, 'confirmed')">Confirmar</button>
+                        <button class="btn" onclick="updateStatus(${appointment.id}, 'cancelled')">Cancelar</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function updateStatus(id, newStatus) {
+            const appointment = appointments.find(a => a.id === id);
+            if (appointment) {
+                appointment.status = newStatus;
+                loadAppointments();
+            }
+        }
+
+        function refreshAppointments() {
+            // Aquí iría la lógica para recargar los datos del servidor
+            loadAppointments();
+        }
+
+        // Cargar datos iniciales
+        loadAppointments();
+    </script>
+</body>
+</html>

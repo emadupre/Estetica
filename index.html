@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estética Belleza</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Hero Section -->
+    <header class="hero">
+        <div class="hero-content">
+            <h1>Descubre Tu Belleza</h1>
+            <p>Servicios profesionales de estética para resaltar tu belleza natural.</p>
+            <a href="#booking" class="btn-primary">Reserva tu turno</a>
+        </div>
+    </header>
+
+    <!-- About Section -->
+    <section id="about" class="about">
+        <h2>Sobre Nosotros</h2>
+        <p>En Estética Belleza, nos dedicamos a ofrecer servicios de calidad que aseguren tu satisfacción. Nuestro equipo de expertos está aquí para ayudarte a verte y sentirte mejor.</p>
+    </section>
+
+     <!-- Sección de Reserva -->
+     <section id="booking" class="booking">
+        <h2>Reserva tu Turno</h2>
+        <form class="booking-form" id="bookingForm">
+            <div class="form-group">
+                <label for="name">Nombre completo</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+
+            <div class="form-group">
+                <label for="phone">Teléfono</label>
+                <input type="tel" id="phone" name="phone" required>
+            </div>
+
+            <div class="form-group">
+                <label>Selecciona el servicio</label>
+                <div class="service-options">
+                    <div class="service-category">
+                        <h4>Depilación</h4>
+                        <select id="depilationZone" name="depilationZone">
+                            <option value="">Selecciona la zona</option>
+                            <option value="piernas">Piernas completas</option>
+                            <option value="axilas">Axilas</option>
+                            <option value="brazos">Brazos</option>
+                            <!-- Agregar más zonas según necesidad -->
+                        </select>
+                    </div>
+
+                    <div class="service-category">
+                        <h4>Servicios de Uñas</h4>
+                        <select id="nailService" name="nailService">
+                            <option value="">Selecciona el servicio</option>
+                            <option value="semipermanente">Esmaltado Semipermanente (manos y pies)</option>
+                            <option value="semipermanente-capi">Esmaltado Semipermanente + Capi</option>
+                            <option value="softgel">Softgel</option>
+                            <option value="esculpidas">Esculpidas</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Selecciona fecha y hora</label>
+                <input type="date" id="date" name="date" required>
+                <div class="time-slots" id="timeSlots">
+                    <!-- Los horarios se generarán dinámicamente con JavaScript -->
+                </div>
+            </div>
+
+            <div class="booking-summary" id="bookingSummary">
+                <!-- El resumen de la reserva se mostrará aquí -->
+            </div>
+
+            <button type="submit" class="btn-primary">Confirmar Reserva</button>
+        </form>
+    </section>
+
+    <!-- Botón de Admin -->
+    <div class="admin-login">
+        <button class="btn-primary" onclick="showAdminLogin()">Logear</button>
+    </div>
+
+    <!-- Modal de Login -->
+    <div class="modal" id="adminModal">
+        <div class="modal-content">
+            <h3>Acceso Admin</h3>
+            <form id="adminLoginForm">
+                <div class="form-group">
+                    <label for="adminUsername">Usuario:</label>
+                    <input type="text" id="adminUsername" required>
+                </div>
+                <div class="form-group">
+                    <label for="adminPassword">Contraseña:</label>
+                    <input type="password" id="adminPassword" required>
+                </div>
+                <button type="submit" class="btn-primary">Ingresar</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2025 Estética Belleza. Todos los derechos reservados.</p>
+        <ul>
+            <li><a href="#">Facebook</a></li>
+            <li><a href="#">Instagram</a></li>
+            <li><a href="#">Twitter</a></li>
+        </ul>
+    </footer>
+    <div class="scroll-top">⬆</div>
+    <script>
+        // Animación de aparición al scroll
+        const sections = document.querySelectorAll('section');
+        const scrollTop = document.querySelector('.scroll-top');
+
+        function checkScroll() {
+            sections.forEach(section => {
+                const sectionTop = section.getBoundingClientRect().top;
+                const windowHeight = window.innerHeight;
+
+                if (sectionTop < windowHeight * 0.75) {
+                    section.classList.add('visible');
+                }
+            });
+
+            // Mostrar/ocultar botón de scroll
+            if (window.pageYOffset > 300) {
+                scrollTop.classList.add('visible');
+            } else {
+                scrollTop.classList.remove('visible');
+            }
+        }
+
+        window.addEventListener('scroll', checkScroll);
+        checkScroll(); // Verificar al cargar la página
+
+        // Scroll al inicio
+        scrollTop.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // Animación del formulario
+        const form = document.querySelector('form');
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            // Aquí puedes agregar la lógica para enviar el formulario
+            alert('Mensaje enviado con éxito!');
+            form.reset();
+        });
+
+        // Generar horarios disponibles
+        function generateTimeSlots() {
+            const timeSlotsContainer = document.getElementById('timeSlots');
+            let html = '';
+            
+            for (let hour = 9; hour < 21; hour++) {
+                for (let minutes of ['00', '30']) {
+                    const time = `${hour.toString().padStart(2, '0')}:${minutes}`;
+                    html += `<div class="time-slot" data-time="${time}">${time}</div>`;
+                }
+            }
+            
+            timeSlotsContainer.innerHTML = html;
+
+            // Evento click para seleccionar horario
+            document.querySelectorAll('.time-slot').forEach(slot => {
+                slot.addEventListener('click', function() {
+                    document.querySelectorAll('.time-slot').forEach(s => s.classList.remove('selected'));
+                    this.classList.add('selected');
+                    updateBookingSummary();
+                });
+            });
+        }
+
+        // Actualizar resumen de reserva
+        function updateBookingSummary() {
+            const name = document.getElementById('name').value;
+            const selectedService = document.getElementById('nailService').value || document.getElementById('depilationZone').value;
+            const selectedDate = document.getElementById('date').value;
+            const selectedTime = document.querySelector('.time-slot.selected')?.dataset.time;
+
+            const summary = document.getElementById('bookingSummary');
+            if (name && selectedService && selectedDate && selectedTime) {
+                summary.innerHTML = `
+                    <h4>Resumen de tu reserva:</h4>
+                    <p>Nombre: ${name}</p>
+                    <p>Servicio: ${selectedService}</p>
+                    <p>Fecha: ${selectedDate}</p>
+                    <p>Hora: ${selectedTime}</p>
+                `;
+            }
+        }
+
+        // Modal de admin
+        function showAdminLogin() {
+            document.getElementById('adminModal').classList.add('active');
+        }
+
+        // Event Listeners
+        document.getElementById('bookingForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            // Aquí iría la lógica para guardar la reserva
+            alert('Reserva confirmada! Te enviaremos un email con los detalles.');
+        });
+
+        document.getElementById('adminLoginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            // Simular login (en producción esto se conectaría con el backend)
+            window.location.href = 'admin-panel.html';
+        });
+
+        // Inicializar
+        generateTimeSlots();
+
+        // Eventos para actualizar el resumen
+        ['name', 'nailService', 'depilationZone', 'date'].forEach(id => {
+            document.getElementById(id)?.addEventListener('change', updateBookingSummary);
+        });
+    </script>
+</body>
+</html>
